@@ -8,10 +8,6 @@
             <v-btn v-if="roles.includes('ROLE_ADMIN')" text href="projetos">
                 Projetos
             </v-btn>
-            
-            <v-btn v-if="roles.includes('ROLE_ADMIN')" text href="funcionarios">
-                Funcionários
-            </v-btn>
 
             <v-btn v-if="roles.includes('ROLE_USER')" text href="apontamentos">
                 Apontamento
@@ -22,10 +18,16 @@
             </v-btn>
 
             <template v-slot:extension v-if="route !== 'dashboard'">
-                <v-tabs v-model="tabs" dark background-color="#621055">
+                <v-tabs v-model="tabs" dark background-color="#621055" v-if="route === 'projetos'">
                     <v-tab>
                         Lista
                     </v-tab>
+                    <v-tab>
+                        Novo
+                    </v-tab>
+                </v-tabs>
+                
+                <v-tabs v-model="tabs" dark background-color="#621055" v-if="route === 'apontamentos'">
                     <v-tab>
                         Novo
                     </v-tab>
@@ -42,23 +44,7 @@
             </v-tab-item>
         </v-tabs-items>
 
-        
-
-        <v-tabs-items v-if="route === 'funcionarios'" v-model="tabs">
-            <v-tab-item>
-                <funcionarios-list></funcionarios-list>    
-            </v-tab-item>
-            <v-tab-item>
-                <funcionarios-form></funcionarios-form>
-            </v-tab-item>
-        </v-tabs-items>
-
-        
-
         <v-tabs-items v-if="route === 'apontamentos'" v-model="tabs">
-            <v-tab-item>
-                <apontamentos-list></apontamentos-list>    
-            </v-tab-item>
             <v-tab-item>
                 <apontamentos-form></apontamentos-form>
             </v-tab-item>
@@ -68,10 +54,7 @@
 
 <script>
 import ProjetosList from '@/components/ProjetosList.vue'
-import FuncionariosList from '@/components/FuncionariosList.vue'
-import ApontamentosList from '@/components/ApontamentosList.vue'
 import ProjetosForm from '@/components/ProjetosForm.vue'
-import FuncionariosForm from '@/components/FuncionariosForm.vue'
 import ApontamentosForm from '@/components/ApontamentosForm.vue'
 
 export default {
@@ -97,9 +80,6 @@ export default {
     components: {
         ProjetosList,
         ProjetosForm,
-        FuncionariosList,
-        FuncionariosForm,
-        ApontamentosList,
         ApontamentosForm
     }
 }

@@ -1,16 +1,15 @@
 <template>
     <div class="progresso-dialog">
-        <v-dialog v-model="dialog" width="500">
+        <v-dialog v-model="dialog" width="500" v-if="!!apontamentos">
             <template v-slot:activator="{ on }">
-                <v-btn class="ml-4" color="#ed6663" dark depressed v-on="on">
+                <v-btn class="ml-4" color="#621055" dark depressed v-on="on">
                     Progresso
-                    <v-progress-circular class="ml-2" dark :value="45" :size="20"></v-progress-circular>
                 </v-btn>
             </template>
 
-            <v-card color="#ed6663" dark>
+            <v-card color="#621055" dark>
                 <v-card-title primary-title>
-                    Progresso do projeto
+                    {{ projeto.nome }}
                     <v-spacer></v-spacer>
                     <v-btn color="#fff"
                             icon
@@ -20,33 +19,16 @@
                 </v-card-title>
 
                 <v-card-text>
-
-                    <v-card class="subcard">
-                        <v-card-title>
-                                <div class="caption grey--text text-uppercase">
-                                    Atual
-                                </div>
-                                <div>
-                                    <span
-                                        class="display-2 font-weight-black black--text"
-                                        v-text="'100'"
-                                    ></span>
-                                    <strong>h</strong>
-                                </div>
-
-                                <div class="caption grey--text text-uppercase">
-                                    Restante
-                                </div>
-                                <div>
-                                    <span
-                                        class="display-2 font-weight-black black--text"
-                                        v-text="'100'"
-                                    ></span>
-                                    <strong>h</strong>
-                                </div>
-                        </v-card-title>
-                    </v-card>
-
+                    <v-sparkline :value="apontamentos"
+                                color="#fff"
+                                auto-draw>
+                    </v-sparkline>
+                    <div class="body-2">
+                        Atual: {{ apontamentos.reduce((a, b) => a + b, 0) }}h
+                    </div>
+                    <div class="body-2">
+                        Planejado: {{ projeto.horas_planejadas }}h
+                    </div>
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -56,10 +38,23 @@
 <script>
 export default {
     name: 'progresso-dialog',
+    props: {
+        projeto: Object
+    },
     data() {
         return {
-            dialog: false
+            dialog: false,
+            apontamentos: null,
         }
+    },
+    mounted() {
+        const app = this;
+
+        this.axios.get('https://lab5-fatec.herokuapp.com/projeto/' + app.projeto.id + '/apontamento' )
+        .then(function (response) {
+            /* eslint-disable no-console */
+            app.apontamentos = response.data.map(apontamento => apontamento.horas);
+        });
     }
 }
 </script>
@@ -67,9 +62,5 @@ export default {
 <style scoped>
     .progresso-dialog {
         display: inline;
-    }
-
-    .subcard {
-        background-color: #fff !important;
     }
 </style>

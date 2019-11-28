@@ -62,7 +62,6 @@ export default {
                 this.axios.post('https://lab5-fatec.herokuapp.com/login', {username, password})
                 .then(function (response){
                     const jwt = response.headers.authorization;
-                    /* eslint-disable no-console */
                     const jwtParsed = JSON.parse(atob(jwt.split('.')[1]));
                     localStorage.setItem('username', jwtParsed.sub);
                     localStorage.setItem('roles', jwtParsed.roles);
